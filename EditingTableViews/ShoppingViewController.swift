@@ -3,6 +3,8 @@ import UIKit
 class ShoppingViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
     var shoppingItems:[ShoppingItem] = []
     var boughtItems:[ShoppingItem] = []
+    var newBoughtItems:[ShoppingItem] = []
+    var isSorting:Bool!
     @IBOutlet weak var shoppingTableView: UITableView!
     @IBAction func editButton(_ sender: UIButton) {
         if shoppingTableView.isEditing == true  {
@@ -14,6 +16,13 @@ shoppingTableView.setEditing(false, animated: false)
             
         }
     }
+    @IBAction func sortButton(_ sender: UIButton) {
+       
+            boughtItems.sort(by: {$0.price < $1.price})
+       
+            shoppingTableView.reloadData()
+    }
+    
     @IBAction func unwind(segue: UIStoryboardSegue) {
         
         guard let addItemVC = segue.source as? AddItemVC
@@ -53,6 +62,7 @@ shoppingTableView.setEditing(false, animated: false)
        configureShoppingItemsTableView()
        loadShoppingItems()
      shoppingTableView.isEditing = false
+        isSorting = false
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -110,10 +120,11 @@ shoppingTableView.setEditing(false, animated: false)
           cell?.detailTextLabel?.text = "Price: \(shoppingItems[indexPath.row].price)"
                 return cell!
         } else {
+            
             let cell2 = tableView.dequeueReusableCell(withIdentifier: "shoppingCart2")
             cell2?.textLabel?.text = boughtItems[indexPath.row].name
             cell2?.detailTextLabel?.text = "Price: \(boughtItems[indexPath.row].price)"
-            return cell2!
+return cell2!
         }
             
             
